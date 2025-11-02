@@ -1,17 +1,13 @@
-import userModel from '../models/user.model.js';
+import userModel from "../models/user.model.js";
 
+export const createUser = async ({ email, password }) => {
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
 
-export const createUser = async ({// make service which create user into db
-    email, password
-}) => {
-    
-    if(!email || !password) {
-    throw new Error('Email and password are required');
-    }
-    const hashedPassword = await userModel.hashPassword(password);
-    const user = await userModel.create({
-        email, hashedPassword
-    });
+  // Create and save user (password auto-hashed by pre-save)
+  const user = new userModel({ email, password });
+  await user.save();
 
-    return user;
-}
+  return user;
+};
